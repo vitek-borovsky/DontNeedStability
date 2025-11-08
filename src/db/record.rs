@@ -1,3 +1,4 @@
+use super::RecordType;
 use std::net::{Ipv4Addr, Ipv6Addr};
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
@@ -21,18 +22,18 @@ pub enum Record {
     TXT(String),
 }
 
-impl ToString for Record {
-    fn to_string(&self) -> String {
+impl Record {
+    pub fn get_type(&self) -> RecordType {
         match self {
-            Record::A(_) => "A".to_string(),
-            Record::AAAA(_) => "AAAA".to_string(),
-            Record::CNAME(_) => "CNAME".to_string(),
-            Record::MX { .. } => "MX".to_string(),
-            Record::NS(_) => "NS".to_string(),
-            Record::PTR(_) => "PTR".to_string(),
-            Record::SOA { .. } => "SOA".to_string(),
-            Record::SRV { .. } => "SRV".to_string(),
-            Record::TXT(_) => "TXT".to_string(),
+            Record::A(_) => RecordType::A,
+            Record::AAAA(_) => RecordType::AAAA,
+            Record::CNAME(_) => RecordType::CNAME,
+            Record::MX { .. } => RecordType::MX,
+            Record::NS(_) => RecordType::NS,
+            Record::PTR(_) => RecordType::PTR,
+            Record::SOA { .. } => RecordType::SOA,
+            Record::SRV { .. } => RecordType::SRV,
+            Record::TXT(_) => RecordType::TXT,
         }
     }
 }

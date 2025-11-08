@@ -4,7 +4,7 @@ pub use in_memory::InMemoryDatabase;
 pub use record::Record;
 
 /// Represents the type of a DNS record for querying.
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum RecordType {
     A,
     AAAA,
@@ -39,22 +39,22 @@ pub trait Database {
     ///
     /// # Arguments
     ///
-    /// * `domain` - The domain name to look up.
+    /// * `fqdn` - The fully qualified domain name to look up.
     /// * `record_type` - The type of record to look up (e.g., `RecordType::A`).
     ///
     /// # Returns
     ///
     /// An `Option` containing the `Record` if found, otherwise `None`.
-    fn lookup_record(&self, domain: &str, record_type: RecordType) -> Option<Record>;
+    fn lookup_record(&self, fqdn: &str, record_type: RecordType) -> Option<&Record>;
     /// Inserts a record into the database.
     ///
     /// # Arguments
     ///
-    /// * `domain` - The domain name for the record.
+    /// * `fqdn` - The fully qualified domain name for the record.
     /// * `record` - The `Record` to insert.
     ///
     /// # Returns
     ///
     /// A `Result` indicating success (`Ok(())`) or an error (`Err(String)`) if the insertion fails.
-    fn insert_record(&mut self, domain: &str, record: Record) -> Result<(), String>;
+    fn insert_record(&mut self, fqdn: &str, record: Record) -> Result<(), String>;
 }
