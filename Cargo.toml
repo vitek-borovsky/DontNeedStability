@@ -5,8 +5,8 @@ edition = "2024"
 
 [dependencies]
 trust-dns-proto = "0.22"
+rand = "0.8" # Only for testing
 
 [[bin]]
 name = "dontNeedStability"
 path = "src/main.rs"
-

@@ -46,6 +46,7 @@ dependencies = [
 name = "dontNeedStability"
 version = "0.1.0"
 dependencies = [
+ "rand",
  "trust-dns-proto",
 ]
 
