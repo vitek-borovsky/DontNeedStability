@@ -1,0 +1,1 @@
+- Database trait.insert_record should return Result<(), Exception type> not Result<(), String>
