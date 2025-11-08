@@ -35,6 +35,7 @@ impl ToString for RecordType {
 
 /// A trait for database operations.
 pub trait Database {
+    fn lookup_meta_records(&self, fqdn: &str, record_type: RecordType) -> Result<Option<Vec<&Record>>, String>;
     /// Looks up a record in the database.
     ///
     /// # Arguments
@@ -45,8 +46,7 @@ pub trait Database {
     /// # Returns
     ///
     /// An `Option` containing the `Record` if found, otherwise `None`.
-    fn lookup_resource_record(&self, fqdn: &str, record_type: RecordType) -> Option<&Record>;
-    fn lookup_meta_records(&self, fqdn: &str, record_type: RecordType) -> Option<Vec<&Record>>;
+    fn lookup_resource_record(&self, fqdn: &str, record_type: RecordType) -> Result<Option<&Record>, String>;
     /// Inserts a record into the database.
     ///
     /// # Arguments

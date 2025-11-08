@@ -23,18 +23,27 @@ impl InMemoryDatabase {
 }
 
 impl Database for InMemoryDatabase {
-    fn lookup_meta_records(&self, fqdn: &str, record_type: RecordType) -> Option<Vec<&Record>> {
+    fn lookup_meta_records(&self, fqdn: &str, record_type: RecordType) -> Result<Option<Vec<&Record>>, String> {
         if ! self.meta_records_types.contains(&record_type) {
-            // TODO Throw exception
+            return Err(format!(
+                "Cannot use lookup_meta_records with RecordType={:?}, try using lookup_resource_record",
+                record_type
+            ));
         }
-        self.meta_records.get(&(fqdn.to_string(), record_type)).map(|vec_records| vec_records.iter().collect())
+        Ok(self.meta_records
+            .get(&(fqdn.to_string(), record_type))
+            .map(|vec_records| vec_records.iter().collect()))
     }
 
-    fn lookup_resource_record(&self, fqdn: &str, record_type: RecordType) -> Option<&Record> {
+    fn lookup_resource_record(&self, fqdn: &str, record_type: RecordType) -> Result<Option<&Record>, String> {
         if ! self.resource_records_types.contains(&record_type) {
-            // TODO Throw exception
+            return Err(format!(
+                "Cannot use lookup_resource_record with RecordType={:?}, try using lookup_meta_records",
+                record_type
+            ));
         }
-        self.resource_records.get(&(fqdn.to_string(), record_type))
+        Ok(self.resource_records
+            .get(&(fqdn.to_string(), record_type)))
     }
 
     fn insert_record(&mut self, fqdn: &str, record: Record) -> Result<(), String> {

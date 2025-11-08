@@ -6,7 +6,7 @@ fn test_lookup_non_existent_record() {
     let db = InMemoryDatabase::new();
     let domain = "nonexistent.com";
 
-    let retrieved_record = db.lookup_resource_record(domain, RecordType::A);
+    let retrieved_record = db.lookup_resource_record(domain, RecordType::A).unwrap();
     assert!(retrieved_record.is_none());
 }
 
@@ -22,7 +22,7 @@ fn test_insert_and_lookup_a_record() {
     assert!(result.is_ok());
 
     // Test lookup
-    let retrieved_record = db.lookup_resource_record(domain, RecordType::A);
+    let retrieved_record = db.lookup_resource_record(domain, RecordType::A).unwrap();
     assert!(retrieved_record.is_some());
     assert_eq!(retrieved_record.unwrap(), &record);
 }
@@ -62,7 +62,7 @@ fn test_insert_and_lookup_ns_record() {
     assert!(result2.is_ok());
 
     // Lookup NS records
-    let retrieved_records = db.lookup_meta_records(domain, RecordType::NS);
+    let retrieved_records = db.lookup_meta_records(domain, RecordType::NS).unwrap();
     assert!(retrieved_records.is_some());
     let records_vec = retrieved_records.unwrap();
     assert_eq!(records_vec.len(), 2);
