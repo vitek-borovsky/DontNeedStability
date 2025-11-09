@@ -5,27 +5,26 @@ use std::sync::Arc;
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
-pub struct Server<F>
-where
-    F: FnMut(&[u8], SocketAddr) + Send + 'static,
-{
+type F = dyn FnMut(&[u8], SocketAddr) + Send + 'static;
+pub struct Server {
     socket: UdpSocket,
     thread_handle: Option<JoinHandle<()>>,
-    callback: Option<F>,
+    callback: Option<Box<F>>,
     running: Arc<AtomicBool>,
 }
 
-impl<F> Server<F>
-where
-    F: FnMut(&[u8], SocketAddr) + Send + 'static,
-{
-    pub fn new(socket_addr: SocketAddr, callback: F) -> Self {
+impl Server {
+    pub fn new(socket_addr: SocketAddr) -> Self {
         Server {
             socket: UdpSocket::bind(socket_addr).unwrap(),
             thread_handle: None,
-            callback: Some(callback),
+            callback: None,
             running: Arc::new(AtomicBool::new(false)),
         }
+    }
+
+    pub fn register_callback(&mut self, f: Box<F>) {
+        self.callback = Some(f);
     }
 
     pub fn run(&mut self) {

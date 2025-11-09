@@ -24,7 +24,8 @@ fn test_udp_packet_capture() -> std::io::Result<()> {
         assert_eq!(data, &clonned_packet[..]);
     };
 
-    let mut serv = Server::new(server_socket_addr, callback);
+    let mut serv = Server::new(server_socket_addr);
+    serv.register_callback(Box::new(callback));
     serv.run();
 
     thread::sleep(Duration::from_secs(1));
