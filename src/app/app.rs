@@ -38,11 +38,12 @@ impl App {
             App::accept_udp_packet(&tx_cloned, data, socket);
         };
         a.server.register_callback(Box::new(callback));
-        a.server.run();
-
         a
     }
 
+    pub fn run(&mut self) {
+        self.server.run();
+    }
 
 
     fn parse_dns_packet(buf: &[u8]) -> Result<Message, Box<dyn std::error::Error>> {
