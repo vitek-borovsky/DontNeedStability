@@ -22,8 +22,7 @@ pub struct App {
 
 
 impl App {
-    pub fn new(database: Box<D>, ) -> Self {
-        let socket: SocketAddr = "127.0.0.1:5353".parse().expect("Invalid address");
+    pub fn new(database: Box<D>, socket: SocketAddr) -> Self {
         let (tx, rx) = mpsc::channel();
         let server = Server::new(socket);
         let mut a: App = App {
