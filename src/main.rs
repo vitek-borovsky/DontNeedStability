@@ -13,8 +13,8 @@ fn main() -> std::io::Result<()> {
 
     let db = InMemoryDatabase::new();
     let mut app: App = App::new(Box::new(db), socket);
-    app.run();
-    println!("RUNNING ...");
+    println!("Starting server ...");
     println!("Press Ctrl+C to stop");
-    loop {}
+    app.run();
+    Ok(())
 }
