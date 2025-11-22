@@ -6,6 +6,13 @@ use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
 type F = dyn FnMut(&[u8], SocketAddr) + Send + 'static;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+pub struct ServerConfig {
+    pub port: u16,
+}
+
 pub struct Server {
     socket: UdpSocket,
     thread_handle: Option<JoinHandle<()>>,

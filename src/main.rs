@@ -5,16 +5,12 @@ use serde::Deserialize;
 
 use dont_need_stability::db::in_memory::InMemoryDatabase;
 use dont_need_stability::app::App;
+use dont_need_stability::server::ServerConfig;
 use dont_need_stability::zone_parser::ZoneParser;
 
 #[derive(Deserialize)]
 struct Config {
     server: ServerConfig,
-}
-
-#[derive(Deserialize)]
-struct ServerConfig {
-    port: u16,
 }
 
 fn main() -> std::io::Result<()> {
