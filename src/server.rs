@@ -11,6 +11,7 @@ use serde::Deserialize;
 #[derive(Deserialize)]
 pub struct ServerConfig {
     pub port: u16,
+    pub zones_directory: std::path::PathBuf,
 }
 
 pub struct Server {

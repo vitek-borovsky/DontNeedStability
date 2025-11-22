@@ -1,6 +1,5 @@
 use std::net::SocketAddr;
 use std::fs;
-use std::path::Path;
 use serde::Deserialize;
 
 use dont_need_stability::db::in_memory::InMemoryDatabase;
@@ -25,7 +24,7 @@ fn main() -> std::io::Result<()> {
 
     let mut db = InMemoryDatabase::new();
 
-    let zones_path = Path::new("zones");
+    let zones_path = &config.server.zones_directory;
     if zones_path.is_dir() {
         for entry in fs::read_dir(zones_path)? {
             let entry = entry?;
