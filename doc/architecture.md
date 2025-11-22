@@ -29,9 +29,13 @@ The `Server` component is the entry point for all DNS queries. Its primary respo
 *   **Response Generation**: Based on the database's response (either a found record or an indication that the record doesn't exist), the server constructs an appropriate DNS response packet.
 *   **Sending Response**: Finally, the server sends the crafted response back to the client that initiated the query.
 
+### 5. Zone Parser (`src/zone_parser.rs`)
+
+The `ZoneParser` module is responsible for parsing standard BIND-style zone files. It reads the content of a zone file, interprets directives like `$ORIGIN` and `$TTL`, and extracts DNS resource records (A, AAAA, CNAME, MX, NS, SOA, TXT). The parsed data is then used to construct `Zone` objects, which are added to the `InMemoryDatabase`.
+
 ## Overall Data Flow
 
-1.  **Server Initialization**: When the application starts (`src/main.rs`), an `InMemoryDatabase` (by default) is created and wrapped within an `App` instance. The `Server` is then initialized with this `App` instance.
+1.  **Server Initialization**: When the application starts (`src/main.rs`), an `InMemoryDatabase` (by default) is created. The `main.rs` then reads zone files from the `zones/` directory, parses them using `ZoneParser`, and adds the resulting `Zone` objects to the `InMemoryDatabase`. The `Server` is then initialized with this `App` instance.
 2.  **Client Query**: A DNS client sends a query (e.g., for `example.com`) to the server's listening address and port.
 3.  **Server Receives Query**: The `Server` component receives and parses the incoming query, extracting the domain name.
 4.  **Application Lookup**: The `Server` delegates the domain lookup to the `App` instance, which in turn calls the `get_record` method on its internal `Database` trait object.
