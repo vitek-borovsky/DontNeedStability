@@ -14,6 +14,10 @@
 - `git log`
 - `git diff`
 
+### Not allowed git commands
+- `git add`
+- `git commit`
+
 ### Standarts for acceptance
 - `cargo check` compiles.
 - `cargo test` has no failing tests.
