@@ -2,9 +2,17 @@
 
 This document explains how to configure the DontNeedStability DNS server.
 
-## 1. Server Address and Port
+## 1. Specifying the Configuration File
 
-The server's listening IP address and port are configured via `config.toml` at the project root. By default, the server listens on `127.0.0.1:8080`.
+By default, the server looks for `config.toml` in the project root. You can specify a different configuration file using the `-c` or `--config` command-line argument:
+
+```bash
+cargo run -- -c /path/to/your/custom_config.toml
+```
+
+## 2. Server Address, Port, and Zones Directory
+
+The server's listening IP address, port, and the directory where DNS zone files are located are configured via `config.toml`. By default, the server listens on `127.0.0.1:8080` and loads zone files from the `zones/` directory.
 
 **`config.toml` example:**
 
@@ -13,13 +21,14 @@ The server's listening IP address and port are configured via `config.toml` at t
 
 [server]
 port = 8080
+zones_directory = "zones" # Path to the directory containing zone files
 ```
 
-To change the port, modify the `port` value in `config.toml`.
+To change the port or zones directory, modify the respective values in `config.toml`.
 
-## 2. DNS Zones and Records
+## 3. DNS Zones and Records
 
-DNS zones and their associated records are defined using standard BIND-style zone files. These files should be placed in the `zones/` directory at the project root.
+DNS zones and their associated records are defined using standard BIND-style zone files. These files should be placed in the directory specified by `zones_directory` in `config.toml`.
 
 Each zone file should represent a single DNS zone and be named after the zone (e.g., `example.com.zone`).
 
@@ -60,7 +69,7 @@ The zone parser currently supports the following DNS record types:
 *   `SOA` (Start of Authority)
 *   `TXT` (Text Record)
 
-## 3. Database Implementation
+## 4. Database Implementation
 
 By default, the DontNeedStability server uses an `InMemoryDatabase`, which stores all DNS records in the server's volatile memory. This is suitable for testing and non-persistent use cases.
 
@@ -74,5 +83,5 @@ If you were to implement a different database backend (e.g., a persistent databa
 // Initializes the in-memory database
 let db = InMemoryDatabase::new();
 // Creates the application instance with the in-memory database
-let app = App::new(db);
+let app = App::new(Box::new(db), socket);
 ```

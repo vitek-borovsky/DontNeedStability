@@ -1,11 +1,20 @@
 use std::net::SocketAddr;
 use std::fs;
 use serde::Deserialize;
+use clap::Parser;
 
 use dont_need_stability::db::in_memory::InMemoryDatabase;
 use dont_need_stability::app::App;
 use dont_need_stability::server::ServerConfig;
 use dont_need_stability::zone_parser::ZoneParser;
+
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Cli {
+    /// Path to the configuration file
+    #[arg(short, long, value_name = "FILE")]
+    config: Option<String>,
+}
 
 #[derive(Deserialize)]
 struct Config {
@@ -13,8 +22,11 @@ struct Config {
 }
 
 fn main() -> std::io::Result<()> {
-    let config_content = fs::read_to_string("config.toml")
-        .expect("Failed to read config.toml");
+    let cli = Cli::parse();
+
+    let config_path = cli.config.unwrap_or_else(|| "config.toml".to_string());
+    let config_content = fs::read_to_string(&config_path)
+        .expect(&format!("Failed to read config file: {}", config_path));
     let config: Config = toml::from_str(&config_content)
         .expect("Failed to parse config.toml");
 
