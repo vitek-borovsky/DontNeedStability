@@ -21,3 +21,7 @@
 
 ### Testing guidelines
 Never check for exact wording of error messages
+
+## Documentation
+-   [Project README](README.md)
+-   [Detailed Documentation](doc/README.md)
