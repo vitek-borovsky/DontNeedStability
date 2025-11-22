@@ -1,5 +1,34 @@
-use super::RecordType;
 use std::net::{Ipv4Addr, Ipv6Addr};
+
+/// Represents the type of a DNS record for querying.
+#[derive(Debug, PartialEq, Eq, Hash, Clone)]
+pub enum RecordType {
+    A,
+    AAAA,
+    CNAME,
+    MX,
+    NS,
+    PTR,
+    SOA,
+    SRV,
+    TXT,
+}
+
+impl ToString for RecordType {
+    fn to_string(&self) -> String {
+        match self {
+            RecordType::A => "A".to_string(),
+            RecordType::AAAA => "AAAA".to_string(),
+            RecordType::CNAME => "CNAME".to_string(),
+            RecordType::MX => "MX".to_string(),
+            RecordType::NS => "NS".to_string(),
+            RecordType::PTR => "PTR".to_string(),
+            RecordType::SOA => "SOA".to_string(),
+            RecordType::SRV => "SRV".to_string(),
+            RecordType::TXT => "TXT".to_string(),
+        }
+    }
+}
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone)]
 pub enum Record {

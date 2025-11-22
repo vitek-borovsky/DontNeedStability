@@ -1,12 +1,7 @@
 use std::net::SocketAddr;
 
-use crate::db::InMemoryDatabase;
-use crate::app::app::App;
-
-mod server;
-mod app;
-mod db;
-
+use dontNeedStability::db::in_memory::InMemoryDatabase;
+use dontNeedStability::app::App;
 
 fn main() -> std::io::Result<()> {
     let socket: SocketAddr = "127.0.0.1:5353".parse().expect("Invalid address");
