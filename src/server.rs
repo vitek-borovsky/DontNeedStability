@@ -5,7 +5,7 @@ use std::sync::Arc;
 use std::thread::{self, JoinHandle};
 use std::time::Duration;
 
-type F = dyn FnMut(&[u8], SocketAddr) + Send + 'static;
+type F = dyn FnMut(&[u8], SocketAddr, &UdpSocket) + Send + 'static;
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -49,7 +49,7 @@ impl Server {
 
     /// Registers a callback function to be executed when a UDP packet is received.
     ///
-    /// The callback function takes the received data as a byte slice and the source `SocketAddr`.
+    /// The callback function takes the received data as a byte slice and the source `SocketAddr` and a reference to the `UdpSocket`.
     /// This method can only be called once before `run()`.
     ///
     /// # Arguments
@@ -69,8 +69,10 @@ impl Server {
     /// let socket_addr = SocketAddr::new(Ipv4Addr::new(127, 0, 0, 1).into(), 8081);
     /// let mut server = Server::new(socket_addr);
     ///
-    /// server.register_callback(Box::new(|data, src| {
+    /// server.register_callback(Box::new(|data, src, socket| {
     ///     println!("Received {:?} bytes from {}", data.len(), src);
+    ///     // Example: Echo the received data back to the sender
+    ///     socket.send_to(data, src).unwrap();
     /// }));
     /// // Callback is registered, server can now be run.
     /// ```
@@ -100,9 +102,10 @@ impl Server {
     /// let client_addr = SocketAddr::new(Ipv4Addr::new(127, 0, 0, 1).into(), 8083);
     ///
     /// let mut server = Server::new(server_addr);
-    /// server.register_callback(Box::new(|data, src| {
+    /// server.register_callback(Box::new(|data, src, socket| {
     ///     assert_eq!(data, b"hello");
     ///     println!("Server received: {:?} from {}", String::from_utf8_lossy(data), src);
+    ///     socket.send_to(b"world", src).unwrap(); // Echo back a response
     /// }));
     /// server.run();
     ///
@@ -134,7 +137,7 @@ impl Server {
             while running.load(Ordering::SeqCst) {
                 match socket.recv_from(&mut buf) {
                     Ok((amt, src)) => {
-                        callback(&buf[..amt], src);
+                        callback(&buf[..amt], src, &socket);
                     }
                     Err(ref e) if e.kind() == std::io::ErrorKind::WouldBlock => {
                         continue;
@@ -163,7 +166,7 @@ impl Server {
     ///
     /// let socket_addr = SocketAddr::new(Ipv4Addr::new(127, 0, 0, 1).into(), 8084);
     /// let mut server = Server::new(socket_addr);
-    /// server.register_callback(Box::new(|_, _| { /* do nothing */ }));
+    /// server.register_callback(Box::new(|_, _, _| { /* do nothing */ }));
     /// server.run();
     /// // ... server is running ...
     /// server.stop();
@@ -174,5 +177,9 @@ impl Server {
         if let Some(handle) = self.thread_handle.take() {
             handle.join().unwrap();
         }
+    }
+
+    pub fn socket(&self) -> &UdpSocket {
+        &self.socket
     }
 }

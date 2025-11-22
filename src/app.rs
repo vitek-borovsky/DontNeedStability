@@ -34,8 +34,8 @@ impl App {
         };
 
         let tx_cloned = a.tx.clone();
-        let callback = move |data: &[u8], socket: SocketAddr| {
-            App::accept_udp_packet(&tx_cloned, data, socket);
+        let callback = move |data: &[u8], src: SocketAddr, socket: &std::net::UdpSocket| {
+            App::accept_udp_packet(&tx_cloned, data, src, socket);
         };
         a.server.register_callback(Box::new(callback));
         a
@@ -54,7 +54,7 @@ impl App {
         Ok(msg)
     }
 
-    pub fn accept_udp_packet(tx: &Sender<Payload>, data: &[u8], src: SocketAddr) {
+    pub fn accept_udp_packet(tx: &Sender<Payload>, data: &[u8], src: SocketAddr, _socket: &std::net::UdpSocket) {
         match App::parse_dns_packet(data) {
             Err(e) => { eprintln!("Failed to parse packet {:?}", e); },
             Ok(msg) => { let _ = tx.send((msg, src)); }
@@ -63,7 +63,7 @@ impl App {
 
     fn process_message(&self) {
         match self.rx.try_recv() {
-            Ok((msg, src)) => App::handle_message(msg, src),
+            Ok((msg, src)) => App::handle_message(msg, src, self.server.socket()),
             Err(std::sync::mpsc::TryRecvError::Empty) => {
                 // no message yet — do something else or sleep briefly
                 std::thread::sleep(std::time::Duration::from_millis(10));
@@ -72,7 +72,10 @@ impl App {
         }
     }
 
-    fn handle_message(msg: Message, src: SocketAddr) {
+    fn handle_message(msg: Message, src: SocketAddr, socket: &std::net::UdpSocket) {
         println!("Processing message {:?} from {:?}", msg, src);
+        // Placeholder: Echo back a simple response
+        let response_data = b"DNS response placeholder";
+        let _ = socket.send_to(response_data, src);
     }
 }
