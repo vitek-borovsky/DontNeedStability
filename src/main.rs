@@ -1,7 +1,7 @@
 use std::net::SocketAddr;
 
-use dontNeedStability::db::in_memory::InMemoryDatabase;
-use dontNeedStability::app::App;
+use dont_need_stability::db::in_memory::InMemoryDatabase;
+use dont_need_stability::app::App;
 
 fn main() -> std::io::Result<()> {
     let socket: SocketAddr = "127.0.0.1:5353".parse().expect("Invalid address");

@@ -43,7 +43,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "dontNeedStability"
+name = "dont_need_stability"
 version = "0.1.0"
 dependencies = [
  "rand",

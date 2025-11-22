@@ -1,8 +1,5 @@
 use std::net::SocketAddr;
-use std::sync::Arc;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{self, Receiver, Sender};
-use std::thread::{self, JoinHandle};
 use trust_dns_proto::op::Message;
 use trust_dns_proto::serialize::binary::{BinDecodable, BinDecoder};
 
@@ -13,6 +10,7 @@ type D = dyn Database + Send + 'static;
 type Payload = (Message, SocketAddr);
 
 pub struct App {
+    #[allow(dead_code)]
     database: Box<D>,
     server: Server,
     tx: Sender<Payload>,
@@ -48,7 +46,6 @@ impl App {
         loop {
             self.process_message();
         }
-        self.server.stop();
     }
 
     fn parse_dns_packet(buf: &[u8]) -> Result<Message, Box<dyn std::error::Error>> {

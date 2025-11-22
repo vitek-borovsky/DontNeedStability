@@ -1,4 +1,4 @@
-use dontNeedStability::db::{Database, InMemoryDatabase, Record, RecordType};
+use dont_need_stability::db::{Database, InMemoryDatabase, Record, RecordType};
 use std::net::Ipv4Addr;
 
 #[test]

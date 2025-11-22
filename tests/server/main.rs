@@ -1,4 +1,4 @@
-use dontNeedStability::server::{Server};
+use dont_need_stability::server::{Server};
 use std::net::{Ipv4Addr, SocketAddr, UdpSocket};
 use rand::{Rng, RngCore, thread_rng};
 use std::thread;

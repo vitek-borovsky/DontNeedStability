@@ -1,5 +1,5 @@
 [package]
-name = "dontNeedStability"
+name = "dont_need_stability"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,5 +8,5 @@ trust-dns-proto = "0.22"
 rand = "0.8" # Only for testing
 
 [[bin]]
-name = "dontNeedStability"
+name = "dont_need_stability"
 path = "src/main.rs"
