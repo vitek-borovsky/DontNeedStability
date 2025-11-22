@@ -1,0 +1,4 @@
+# Configuration for DontNeedStability DNS Server
+
+[server]
+port = 8080

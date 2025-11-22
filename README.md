@@ -10,7 +10,7 @@ To run the DNS server, use the following command:
 cargo run
 ```
 
-By default, the server will listen on `127.0.0.1:8080` and use an in-memory database. You can configure the server by modifying `src/main.rs`.
+The server's port is configured via `config.toml`. By default, it listens on `127.0.0.1:8080` and uses an in-memory database.
 
 Example query using `dig`:
 
