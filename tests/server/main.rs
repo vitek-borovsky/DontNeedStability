@@ -20,7 +20,7 @@ fn test_udp_packet_capture() -> std::io::Result<()> {
     let client_socket_addr = SocketAddr::new(Ipv4Addr::new(127, 0, 0, 1).into(), 5354);
     let client_socket = UdpSocket::bind(client_socket_addr)?;
 
-    let callback = move |data: &[u8], _src: SocketAddr| {
+    let callback = move |data: &[u8], _src: SocketAddr, _: &UdpSocket| {
         assert_eq!(data, &clonned_packet[..]);
     };
 
